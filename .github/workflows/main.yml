@@ -1,4 +1,4 @@
-name: Node.js CI
+name: Node.js CI with PM2 (No .env)
 
 on:
   push:
@@ -11,7 +11,7 @@ on:
     - cron: '0 */6 * * *'
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
 
     strategy:
@@ -19,10 +19,10 @@ jobs:
         node-version: [20.x]
 
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
@@ -36,10 +36,5 @@ jobs:
       - name: Install PM2 globally
         run: npm install -g pm2
 
-      - name: Show environment and file structure
-        run: |
-          ls -la
-          cat .env || echo ".env file not found"
-
-      - name: Start app with PM2 runtime
+      - name: Start bot with PM2
         run: pm2-runtime index.js
