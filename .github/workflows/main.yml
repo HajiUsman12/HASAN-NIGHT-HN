@@ -33,15 +33,13 @@ jobs:
       - name: Install FFmpeg
         run: sudo apt-get update && sudo apt-get install -y ffmpeg
 
-      - name: Start application with timeout
-        run: |
-          timeout 21590s npm start
+      - name: Install PM2 globally
+        run: npm install -g pm2
 
-      - name: Save state (Optional)
+      - name: Show environment and file structure
         run: |
-          if [ -f ./save_state.sh ]; then
-            chmod +x ./save_state.sh
-            ./save_state.sh
-          else
-            echo "save_state.sh not found, skipping"
-          fi
+          ls -la
+          cat .env || echo ".env file not found"
+
+      - name: Start app with PM2 runtime
+        run: pm2-runtime index.js
